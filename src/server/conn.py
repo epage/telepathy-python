@@ -264,7 +264,7 @@ class Connection(_Connection, DBusProperties):
 
         ret = []
         for name in names:
-            handle = self.handle_by_name(handle_type, name)
+            handle = self.get_handle_by_name(handle_type, name)
             self.add_client_handle(handle, sender)
             ret.append(handle.get_id())
 
