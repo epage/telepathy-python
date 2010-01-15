@@ -168,6 +168,25 @@ class Connection(_Connection, DBusProperties):
         else:
             self._client_handles[sender] = set([(handle.get_type(), handle)])
 
+    def get_handle_by_id(self, handle_type, handle_id):
+        self.check_handle(handle_type, handle_id)
+        return self._handles[handle_type, handle_id]
+
+    def get_handle_by_name(self, handle_type, handle_name):
+        self.check_handle_type(handle_type)
+        handle = None
+
+        for candidate in self._handles.itervalues():
+            if candidate.get_name() == handle_name:
+                handle = candidate
+                break
+        else:
+            id = self.get_handle_id()
+            handle = Handle(id, handle_type, handle_name)
+            self._handles[handle_type, id] = handle
+
+        return handle
+
     def name_owner_changed_callback(self, name, old_owner, new_owner):
         # when name and old_owner are the same, and new_owner is
         # blank, it is the client itself releasing its name... aka exiting
@@ -245,17 +264,7 @@ class Connection(_Connection, DBusProperties):
 
         ret = []
         for name in names:
-            handle = None
-            for candidate in self._handles.values():
-                if candidate.get_name() == name:
-                    handle = candidate
-                    break
-
-            if not handle:
-                id = self.get_handle_id()
-                handle = Handle(id, handle_type, name)
-                self._handles[handle_type, id] = handle
-
+            handle = self.handle_by_name(handle_type, name)
             self.add_client_handle(handle, sender)
             ret.append(handle.get_id())
 
@@ -473,19 +482,15 @@ class ConnectionInterfaceRequests(
             HANDLE_TYPE_NONE)
         target_handle = props.get(CHANNEL_INTERFACE + '.TargetHandle', None)
         target_id = props.get(CHANNEL_INTERFACE + '.TargetID', None)
+		# Note: what the spec calls a handle, we call an ID
+		# What the spec calls an ID, we call a name
+		# What we call a handle is a handle object
 
         altered_properties = props.copy()
 
         if target_handle_type != HANDLE_TYPE_NONE:
             if target_handle == None:
-                # Turn TargetID into TargetHandle.
-                for handle in self._handles.itervalues():
-                    if handle.get_name() == target_id and handle.get_type() == target_handle_type:
-                        target_handle = handle.get_id()
-                if not target_handle:
-                    raise InvalidHandle('TargetID %s not valid for type %d' %
-                        target_id, target_handle_type)
-
+                target_handle = self.get_handle_by_name(target_handle_type, target_id).get_id()
                 altered_properties[CHANNEL_INTERFACE + '.TargetHandle'] = \
                     target_handle
             else:
