@@ -62,7 +62,7 @@ class Channel(_Channel, DBusProperties):
 
         self._immutable_properties = dict()
 
-        self._handle = self._conn.handle(
+        self._handle = self._conn.get_handle_by_id(
             props[CHANNEL_INTERFACE + '.TargetHandleType'],
             props[CHANNEL_INTERFACE + '.TargetHandle'])
         self._interfaces = set()
