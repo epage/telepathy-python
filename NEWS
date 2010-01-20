@@ -1,5 +1,17 @@
-telepathy-python 0.15.14 (UNRELEASED)
+telepathy-python 0.15.15 (UNRELEASED)
 =====================================
+
+Enhancements:
+
+Fixes:
+
+telepathy-python 0.15.14 (2010-01-19)
+=====================================
+
+The "Madness? This is Our House!" release.
+
+Fixes:
+  * CreateChannel now really create a new channel.
 
 telepathy-python 0.15.13 (2009-12-14)
 =====================================
