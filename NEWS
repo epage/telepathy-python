@@ -1,9 +1,43 @@
-telepathy-python 0.15.16 (UNRELEASED)
+telepathy-python 0.15.18 (UNRELEASED)
 =====================================
+
+Enhancements:
 
 Fixes:
 
-telepathy-python 0.15.15 (2009-01-20)
+ * fd.o#27378: allow TargetHandle=0 when TargetHandleType=NONE.
+
+telepathy-python 0.15.17 (2010-03-12)
+=====================================
+
+Enhancements:
+
+ * New function ChannelManager.implement_channel_classes to deprecate
+   _implement_channel_class. This allows implementing multiple channel
+   classes per channel type. Fixes fd.o#26979.
+
+ * Add new NoneHandle class to represent a handle type of NONE, and
+   use this class so that telepathy.server.Handle's methods return
+   NoneHandle objects for HT=NONE, instead of None.
+
+Fixes:
+
+ * Allow TargetHandleType=NONE when requesting a new channel.
+
+telepathy-python 0.15.16 (2010-03-09)
+=====================================
+
+The "Capybara is a vegan rodent" release.
+
+Enhancements:
+  * implement setting the Enabled property in the Debug interface
+  * Allow specifying the object path of channels
+
+Fixes:
+  * Return actual channel properties in EnsureChannel/CreateChannel
+  * Fix connection.check_parameters to accept dbus.Boolean
+
+telepathy-python 0.15.15 (2010-01-20)
 =====================================
 
 The "square" release.
